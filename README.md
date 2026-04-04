@@ -38,9 +38,9 @@
 
 ## 🔗 相关链接
 
-- GitHub 仓库：[https://github.com/Beggars-Group/BlueArchiveLottery](https://github.com/Beggars-Group/BlueArchiveLottery)
-- 问题反馈：[Issues](https://github.com/Beggars-Group/BlueArchiveLottery/issues)
-- 官网：[https://beggars-group.github.io/BlueArchiveLottery/](https://beggars-group.github.io/BlueArchiveLottery/)
+- GitHub 仓库：[https://github.com/Beggars-Group/bal](https://github.com/Beggars-Group/bal)
+- 问题反馈：[Issues](https://github.com/Beggars-Group/bal/issues)
+- 官网：[https://beggars-group.github.io/bal/](https://beggars-group.github.io/bal/)
 
 ---
 
