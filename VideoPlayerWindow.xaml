@@ -1,0 +1,53 @@
+<Window x:Class="BlueArchiveLottery.VideoPlayerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" WindowState="Maximized"
+        Topmost="True" ShowInTaskbar="False"
+        Background="Black"
+        AllowsTransparency="True"
+        KeyDown="Window_KeyDown">
+    <Window.Resources>
+        <DrawingAttributes x:Key="SigAttr" Color="#90FEC8" Width="3" Height="3" FitToCurve="True"/>
+        <Style x:Key="SkipBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="#99000000"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#CC000000"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <MediaElement x:Name="VideoPlayer" LoadedBehavior="Manual"
+                      Stretch="Uniform" MediaEnded="VideoPlayer_MediaEnded"
+                      MediaFailed="VideoPlayer_MediaFailed"/>
+
+        <InkCanvas x:Name="SignatureCanvas" Background="Transparent"
+                   Visibility="Collapsed"
+                   EditingMode="Ink"
+                   DefaultDrawingAttributes="{StaticResource SigAttr}"
+                   MouseLeftButtonDown="SignatureCanvas_MouseLeftButtonDown"
+                   MouseMove="SignatureCanvas_MouseMove"
+                   MouseLeftButtonUp="SignatureCanvas_MouseLeftButtonUp"/>
+
+        <Button x:Name="SkipButton" Content="跳过 >>"
+                Style="{StaticResource SkipBtnStyle}"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="0,10,10,0"
+                Click="SkipButton_Click" Visibility="Collapsed"/>
+    </Grid>
+</Window>
