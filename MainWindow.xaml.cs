@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using BlueArchiveLottery.Helpers;
 using BlueArchiveLottery.Models;
@@ -31,7 +32,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        var host = new System.Windows.Controls.Grid { Visibility = Visibility.Collapsed };
+        var host = new Grid { Visibility = Visibility.Collapsed };
         host.Children.Add(_bgmPlayer);
         ((Panel)Content).Children.Add(host);
 
@@ -185,7 +186,7 @@ public partial class MainWindow : Window
 
     private void StartNormalLottery()
     {
-        BtnStop.IsEnabled = true;
+        // 不再需要启用停止按钮
         _normalEngine = new NormalLotteryEngine(_levels);
         _normalEngine.UpdateResult += text => ResultDisplay.Text = text;
         _normalEngine.ResultReady += OnNormalResult;
@@ -203,10 +204,8 @@ public partial class MainWindow : Window
     {
         Dispatcher.Invoke(() =>
         {
-            string stars = new string('⭐', Math.Max(0, result.Star - 1));
-            ResultDisplay.Text = $"抽选结果：{result.Item} (⭐{stars})";
+            ShowResultWithGoldStars(result);
             BtnStart.IsEnabled = true;
-            BtnStop.IsEnabled = false;
         });
     }
 
@@ -216,13 +215,7 @@ public partial class MainWindow : Window
         {
             MessageBox.Show(msg, "错误");
             BtnStart.IsEnabled = true;
-            BtnStop.IsEnabled = false;
         });
-    }
-
-    private void BtnStop_Click(object sender, RoutedEventArgs e)
-    {
-        _normalEngine?.Stop();
     }
 
     private void PlayVideo(int starLevel)
@@ -233,14 +226,29 @@ public partial class MainWindow : Window
         {
             Dispatcher.Invoke(() =>
             {
-                string stars = _cachedResult != null
-                    ? new string('⭐', Math.Max(0, _cachedResult.Star - 1))
-                    : "";
-                ResultDisplay.Text = $"抽选结果：{_cachedResult?.Item} (⭐{stars})";
+                if (_cachedResult != null)
+                {
+                    ShowResultWithGoldStars(_cachedResult);
+                }
                 BtnStart.IsEnabled = true;
             });
         };
         _videoWindow.Show();
+    }
+
+    private void ShowResultWithGoldStars(LotteryResult result)
+    {
+        ResultDisplay.Inlines.Clear();
+
+        Brush textBrush = (Brush)App.Current.Resources["TextBrush"] ?? Brushes.White;
+        Brush goldBrush = Brushes.Gold;
+
+        int extraStars = Math.Max(0, result.Star - 1);
+        string starsStr = new string('⭐', extraStars);
+
+        ResultDisplay.Inlines.Add(new Run($"抽选结果：{result.Item} (⭐") { Foreground = textBrush });
+        ResultDisplay.Inlines.Add(new Run(starsStr) { Foreground = goldBrush });
+        ResultDisplay.Inlines.Add(new Run(")") { Foreground = textBrush });
     }
 
     private void BtnSettings_Click(object sender, RoutedEventArgs e)

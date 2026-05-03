@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BlueArchiveLottery.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="曜麟·天衡" Height="600" Width="800"
+        Title="曜麟·天衡" Height="600" Width="900"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         Background="{DynamicResource BackgroundBrush}">
@@ -11,9 +11,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- 标题图片 -->
         <Image Grid.Row="0" Source="resources/img/title.png"
                Stretch="Uniform" Height="120" Margin="0,0,0,10"
                RenderOptions.BitmapScalingMode="Fant"/>
@@ -37,25 +37,19 @@
                 BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="2"
                 CornerRadius="15" Padding="20" Margin="10,10">
             <TextBlock x:Name="ResultDisplay" Text="点击开始抽选"
-           FontSize="24" FontWeight="Bold"
-           FontFamily="Segoe UI Emoji, Microsoft YaHei"
-           HorizontalAlignment="Center" VerticalAlignment="Center"
-           Foreground="{DynamicResource TextBrush}"
-           TextWrapping="Wrap"/>
+                       FontSize="24" FontWeight="Bold"
+                       FontFamily="Segoe UI Emoji, Microsoft YaHei"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextBrush}"
+                       TextWrapping="Wrap"/>
         </Border>
 
         <!-- 按钮区域 -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
             <Button x:Name="BtnStart" Content="开始抽选" Click="BtnStart_Click"
                     Style="{DynamicResource PrimaryButton}"/>
-            <Button x:Name="BtnStop" Content="停止抽选" Click="BtnStop_Click"
-                    Style="{DynamicResource SecondaryButton}" IsEnabled="False"/>
             <Button x:Name="BtnSettings" Content="设置" Click="BtnSettings_Click"
                     Style="{DynamicResource AccentButton}"/>
         </StackPanel>
-
-        <!-- 分割线 -->
-        <Rectangle Grid.Row="4" Height="2" Fill="{DynamicResource PrimaryBrush}"
-                   VerticalAlignment="Top" Margin="0,5"/>
     </Grid>
 </Window>

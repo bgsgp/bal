@@ -1,4 +1,4 @@
-using System.Windows;   // 提供 SystemParameters
+using System.Windows;
 using Microsoft.Win32;
 
 namespace BlueArchiveLottery.Services;
@@ -16,20 +16,20 @@ public static class ThemeService
             if (key != null)
             {
                 var value = key.GetValue("AppsUseLightTheme");
-                if (value is int useLight && useLight == 0)
-                    return AppTheme.Dark;
+                if (value is int useLight)
+                    return useLight == 0 ? AppTheme.Dark : AppTheme.Light;
             }
         }
         catch { }
+
         try
         {
-            // SystemParameters.WindowGlassColor 返回 System.Windows.Media.Color
-            var c = SystemParameters.WindowGlassColor;
-            // 自行计算亮度（公式：0.299*R + 0.587*G + 0.114*B）
-            double brightness = 0.299 * c.R + 0.587 * c.G + 0.114 * c.B;
-            if (brightness < 128) return AppTheme.Dark;
+            var windowColor = SystemColors.WindowColor;
+            double brightness = 0.299 * windowColor.R + 0.587 * windowColor.G + 0.114 * windowColor.B;
+            return brightness < 128 ? AppTheme.Dark : AppTheme.Light;
         }
         catch { }
+
         return AppTheme.Light;
     }
 

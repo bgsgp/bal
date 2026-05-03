@@ -40,24 +40,29 @@ public class NormalLotteryEngine : IDisposable
             var allItems = _levels.SelectMany(l => l.items).ToList();
             if (allItems.Count == 0)
             {
-                InvokeError("æ²¡æœ‰å¯æŠ½é€‰çš„é¡¹ç›®ï¼");
+                InvokeError("Ã»ÓĞ¿É³éÑ¡µÄÏîÄ¿£¡");
                 return;
             }
             var rnd = new Random();
             var start = DateTime.Now;
-            while (!token.IsCancellationRequested && (DateTime.Now - start).TotalSeconds < 1.5)
+
+            // ¿ìËÙ¹ö¶¯½×¶Î£º1.0 Ãë
+            while (!token.IsCancellationRequested && (DateTime.Now - start).TotalSeconds < 1.0)
             {
                 var picked = allItems[rnd.Next(allItems.Count)];
                 InvokeUpdate(picked);
                 await Task.Delay(100, token);
             }
-            while (!token.IsCancellationRequested && (DateTime.Now - start).TotalSeconds < 3.0)
+
+            // ÂıËÙ¹ö¶¯½×¶Î£º×î¶àµ½ 2.0 Ãë
+            while (!token.IsCancellationRequested && (DateTime.Now - start).TotalSeconds < 2.0)
             {
                 var picked = allItems[rnd.Next(allItems.Count)];
                 InvokeUpdate(picked);
                 int delay = 200 + (int)((DateTime.Now - start).TotalSeconds * 100);
                 await Task.Delay(Math.Min(delay, 600), token);
             }
+
             if (!token.IsCancellationRequested)
             {
                 var final = PickFinal(rnd);
@@ -120,7 +125,7 @@ public class SilentLotteryEngine
             var allItems = _levels.SelectMany(l => l.items).ToList();
             if (allItems.Count == 0)
             {
-                InvokeError("æ²¡æœ‰å¯æŠ½é€‰çš„é¡¹ç›®ï¼");
+                InvokeError("Ã»ÓĞ¿É³éÑ¡µÄÏîÄ¿£¡");
                 return;
             }
             var rnd = new Random();
