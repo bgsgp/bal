@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>曜麟·天衡 | 奖励/惩罚抽选器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', '微软雅黑', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
+            color: #eef;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            backdrop-filter: blur(2px);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #a0e9ff, #6c8eff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            background: rgba(108, 142, 255, 0.2);
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(108, 142, 255, 0.4);
+        }
+
+        .badge {
+            margin-top: 1rem;
+        }
+
+        .badge a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            font-size: 0.9rem;
+            border-bottom: 1px dotted #6c8eff;
+        }
+
+        .hero {
+            background: rgba(15, 25, 45, 0.6);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(108, 142, 255, 0.3);
+            backdrop-filter: blur(8px);
+            text-align: center;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #6c8eff;
+            color: #0a0f1e;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin: 0 0.5rem;
+            box-shadow: 0 4px 12px rgba(108, 142, 255, 0.3);
+        }
+
+        .btn:hover {
+            background: #8ca4ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 142, 255, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #6c8eff;
+            color: #6c8eff;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(108, 142, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: rgba(20, 30, 50, 0.5);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(108, 142, 255, 0.2);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            border-color: #6c8eff;
+            background: rgba(30, 40, 65, 0.6);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card p {
+            color: #ccd;
+            font-size: 0.95rem;
+        }
+
+        pre {
+            background: #0a0e1a;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            border-left: 4px solid #6c8eff;
+            margin: 1rem 0;
+        }
+
+        .config-section {
+            background: rgba(10, 14, 26, 0.7);
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            margin: 2rem 0;
+        }
+
+        .sys-req {
+            background: rgba(255, 100, 100, 0.1);
+            border-left: 4px solid #ff8888;
+            padding: 0.8rem 1rem;
+            border-radius: 0.8rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(108, 142, 255, 0.2);
+            font-size: 0.85rem;
+            color: #88a;
+        }
+
+        @media (max-width: 700px) {
+            h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .btn { padding: 0.6rem 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🎲 曜麟·天衡</h1>
+        <div class="subtitle">奖励/惩罚抽选器 · 仪式感全开</div>
+        <div class="badge">
+            <a href="#">普通 & 完全模式</a>
+            <a href="#">全屏视频互动</a>
+            <a href="#">自定义奖池</a>
+        </div>
+    </header>
+
+    <div class="hero">
+        <p>🎯 一键抽选，星光照进现实。<br>
+        🎬 完全模式搭配视频与手写签名板，让每一次抽奖都成为表演。</p>
+        <div>
+            <a href="https://github.com/bgsgp/bal/releases/latest" class="btn">⬇️ 立即下载</a>
+            <a href="https://github.com/bgsgp/bal" class="btn btn-outline">📂 GitHub 仓库</a>
+        </div>
+        <p style="font-size:0.8rem; margin-top:1rem;">支持 Windows 10 / 11 (64位)，需要 .NET 10 运行时（可移植包需手动安装）</p>
+    </div>
+
+    <div class="features">
+        <div class="card">
+            <h3>🎲 双模式抽选</h3>
+            <p><strong>普通模式</strong>：奖项名称飞速滚动，按下停止定格最终结果。<br>
+            <strong>完全模式</strong>：后台静默抽取，播放高燃视频并启用透明签名板，仪式感爆棚。</p>
+        </div>
+        <div class="card">
+            <h3>🎬 视频 + 签名板</h3>
+            <p>根据抽中星级自动播放对应视频，结束后可在屏幕上手写签名，亦可点击跳过。完全模式下的明星体验。</p>
+        </div>
+        <div class="card">
+            <h3>🌓 自适应主题</h3>
+            <p>自动跟随系统亮色/暗色模式，圆角按钮与渐变背景让界面始终保持现代感。</p>
+        </div>
+        <div class="card">
+            <h3>⚙️ 灵活配置</h3>
+            <p>所有等级、概率、奖项均通过 <code>obj.json</code> 文件控制。支持任意星级、任意数量的奖励/惩罚条目。初次运行自动生成默认配置。</p>
+        </div>
+        <div class="card">
+            <h3>✨ 4K 高分支持</h3>
+            <p>基于 WPF 原生 PerMonitorV2 DPI 感知，在高分辨率显示器上依然清晰锐利。</p>
+        </div>
+        <div class="card">
+            <h3>🎵 沉浸 BGM</h3>
+            <p>完全模式下自动循环播放背景音乐，可替换为你喜欢的音频文件，氛围拉满。</p>
+        </div>
+    </div>
+
+    <div class="config-section">
+        <h2>📄 配置示例</h2>
+        <p>在程序目录下的 <code>resources/obj.json</code> 文件中编辑奖池：</p>
+        <pre>{
+  "levels": [
+    {
+      "star": 1,
+      "probability": 78.5,
+      "items": ["获得100金币", "获得经验值+50", "跳过一次作业"]
+    },
+    {
+      "star": 2,
+      "probability": 18.5,
+      "items": ["打扫教室卫生", "写额外数学作业"]
+    },
+    {
+      "star": 3,
+      "probability": 3.0,
+      "items": ["操场跑圈5圈", "背完整本语文课本重点"]
+    }
+  ]
+}</pre>
+        <p><strong>参数说明：</strong><br>
+        • <code>star</code> — 星级（1-2 对应 simple 视频，3 对应 special 视频）<br>
+        • <code>probability</code> — 概率（百分比，总和建议 100%）<br>
+        • <code>items</code> — 该星级下的具体奖项/惩罚列表<br>
+        💡 修改后保存，下次抽选即可生效。若首次运行无配置文件，程序会自动生成默认版。
+        </p>
+
+        <div class="sys-req">
+            ⚙️ <strong>系统要求</strong>：仅支持 <strong>Windows 10 / 11 64位</strong>，需要安装 <a href="https://dotnet.microsoft.com/download/dotnet/10.0" style="color:#6c8eff;">.NET 10 桌面运行时（Desktop Runtime）</a>。下载页面提供安装程序与便携包。
+        </div>
+    </div>
+
+    <div class="hero" style="background: rgba(0,0,0,0.4);">
+        <h3 style="margin-bottom: 0.5rem;">🚀 如何使用</h3>
+        <p>1️⃣ 下载最新版安装包或便携包<br>
+        2️⃣ （可选）编辑 <code>obj.json</code> 定制奖池<br>
+        3️⃣ 运行 <strong>bal.exe</strong><br>
+        4️⃣ 在设置中切换普通/完全模式<br>
+        5️⃣ 点击“开始抽选”，体验惊喜时刻！</p>
+        <p style="margin-top: 1rem;">🎯 完全模式下按下 <strong>Esc</strong> 可随时退出视频窗口。</p>
+    </div>
+
+    <footer>
+        <p>曜麟·天衡 | 开源项目 | 用 🎲 和 ⭐ 点亮每一次选择</p>
+        <p>制作单位：丐帮集团第一院·物理版象棋开发与研究院™ × 丐帮集团第五院·中央编程院™</p>
+        <p>开发者：鬼狗子-Zero、清弦-Zero、沐璃-Zero（协助研发）</p>
+        <p><a href="https://bggp.dpdns.org/1/bal/" style="color:#6c8eff;">官网</a> · <a href="https://github.com/bgsgp/bal/releases/latest" style="color:#6c8eff;">下载 Release</a></p>
+        <p style="margin-top:1rem;">如果对你有帮助，欢迎给仓库点个 ⭐</p>
+    </footer>
+</div>
+</body>
+</html>
