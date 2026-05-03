@@ -24,7 +24,21 @@ public partial class VideoPlayerWindow : Window
     {
         InitializeComponent();
         _starLevel = starLevel;
-        _videoFolder = Path.Combine(PathHelper.ResourcesPath, PathHelper.GetVideoFolder(starLevel));
+
+        // 基础视频文件夹（simple 或 special）
+        string baseVideoFolder = Path.Combine(PathHelper.ResourcesPath, PathHelper.GetVideoFolder(starLevel));
+
+        // 随机选择阿洛娜（A.R.O.N.A）或普拉娜（Plana）
+        var rnd = new Random();
+        string characterFolder = rnd.Next(2) == 0 ? "A.R.O.N.A" : "Plana";
+        _videoFolder = Path.Combine(baseVideoFolder, characterFolder);
+
+        // 若随机到的角色文件夹不存在，则回退到另一个
+        if (!Directory.Exists(_videoFolder))
+        {
+            string fallback = characterFolder == "A.R.O.N.A" ? "Plana" : "A.R.O.N.A";
+            _videoFolder = Path.Combine(baseVideoFolder, fallback);
+        }
 
         _drawStopTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         _drawStopTimer.Tick += (s, e) => { _drawStopTimer.Stop(); PlayOpenVideo(); };
