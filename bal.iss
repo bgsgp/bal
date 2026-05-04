@@ -3,7 +3,7 @@
 ; 仅供非商业使用
 
 #define MyAppName "曜麟·天衡"
-#define MyAppVersion "2.4"
+#define MyAppVersion "2.5"
 #define MyAppPublisher "丐帮集团第一院·物理版象棋开发与研究院™ × 丐帮集团第五院·中央编程院™"
 #define MyAppURL "https://bggp.dpdns.org/1/bal/"
 #define MyAppExeName "bal.exe"
@@ -26,7 +26,7 @@ ArchitecturesAllowed=x64compatible
 ; "ArchitecturesInstallIn64BitMode=x64compatible" 要求在 X64 或 Windows 11 on Arm 上以 "64-位模式" 进行安装。
 ArchitecturesInstallIn64BitMode=x64compatible
 ; 不关联文件类型，故移除 ChangesAssociations
-DisableProgramGroupPage=no
+DisableProgramGroupPage=丐帮软件
 DefaultGroupName=丐帮软件
 ; 取消注释以下行以在非管理安装模式下运行 (仅为当前用户安装)。
 ;PrivilegesRequired=lowest

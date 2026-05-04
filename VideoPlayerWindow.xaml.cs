@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 using BlueArchiveLottery.Helpers;
 
 namespace BlueArchiveLottery;
@@ -15,7 +14,6 @@ public partial class VideoPlayerWindow : Window
     private readonly string _videoFolder;
     private string _currentPhase = "start";
     private bool _skipPlayed = false;
-    private readonly DispatcherTimer _drawStopTimer;
     private Point _pressPoint;
 
     public event Action? VideoEnded;
@@ -25,22 +23,17 @@ public partial class VideoPlayerWindow : Window
         InitializeComponent();
         _starLevel = starLevel;
 
-        // 基础视频文件夹（simple 或 special）
         string baseVideoFolder = Path.Combine(PathHelper.ResourcesPath, PathHelper.GetVideoFolder(starLevel));
 
-        // 根据星级选择不同的角色文件夹逻辑
         if (starLevel == 3)
         {
-            // 三星：按概率随机选择 A.R.O.N.A、Plana、Both、Change
             _videoFolder = ChooseSpecialCharacterFolder(baseVideoFolder);
         }
         else
         {
-            // 普通星：随机选择 A.R.O.N.A 或 Plana（各 50%）
             var rnd = new Random();
             string characterFolder = rnd.Next(2) == 0 ? "A.R.O.N.A" : "Plana";
             _videoFolder = Path.Combine(baseVideoFolder, characterFolder);
-            // 若随机到的文件夹不存在，则回退到另一个
             if (!Directory.Exists(_videoFolder))
             {
                 string fallback = characterFolder == "A.R.O.N.A" ? "Plana" : "A.R.O.N.A";
@@ -48,53 +41,32 @@ public partial class VideoPlayerWindow : Window
             }
         }
 
-        _drawStopTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
-        _drawStopTimer.Tick += (s, e) => { _drawStopTimer.Stop(); PlayOpenVideo(); };
-
+        // 不再初始化或使用任何计时器
         PlayStartVideo();
     }
 
-    /// <summary>
-    /// 三星时按概率选取角色文件夹：0.4 A.R.O.N.A、0.4 Plana、0.15 Both、0.05 Change
-    /// </summary>
     private static string ChooseSpecialCharacterFolder(string basePath)
     {
         var rnd = new Random();
-        double roll = rnd.NextDouble(); // 0.0 ~ 1.0
-
+        double roll = rnd.NextDouble();
         string[] candidates = ["A.R.O.N.A", "Plana", "Both", "Change"];
         double[] probabilities = [0.4, 0.4, 0.15, 0.05];
-
         double cumulative = 0;
-        string selected = candidates[0]; // 默认为 A.R.O.N.A
-
+        string selected = candidates[0];
         for (int i = 0; i < candidates.Length; i++)
         {
             cumulative += probabilities[i];
-            if (roll < cumulative)
-            {
-                selected = candidates[i];
-                break;
-            }
+            if (roll < cumulative) { selected = candidates[i]; break; }
         }
-
         string fullPath = Path.Combine(basePath, selected);
-
-        // 若所选文件夹不存在，按顺序回退到第一个存在的文件夹
         if (!Directory.Exists(fullPath))
         {
             foreach (var folder in candidates)
             {
                 string fallbackPath = Path.Combine(basePath, folder);
-                if (Directory.Exists(fallbackPath))
-                {
-                    fullPath = fallbackPath;
-                    break;
-                }
+                if (Directory.Exists(fallbackPath)) { fullPath = fallbackPath; break; }
             }
-            // 如果都不存在，保持原 fullPath，后续播放时会报错（可接受）
         }
-
         return fullPath;
     }
 
@@ -118,9 +90,7 @@ public partial class VideoPlayerWindow : Window
         _currentPhase = "skip";
         SkipButton.Visibility = Visibility.Collapsed;
         SignatureCanvas.Visibility = Visibility.Collapsed;
-        _drawStopTimer.Stop();
         SignatureCanvas.Strokes.Clear();
-
         string path = Path.Combine(_videoFolder, "Skip.mp4");
         if (File.Exists(path)) PlayVideoFile(path);
         else Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(PlayOpenVideo));
@@ -131,9 +101,7 @@ public partial class VideoPlayerWindow : Window
         _currentPhase = "open";
         SkipButton.Visibility = Visibility.Collapsed;
         SignatureCanvas.Visibility = Visibility.Collapsed;
-        _drawStopTimer.Stop();
         SignatureCanvas.Strokes.Clear();
-
         string path = Path.Combine(_videoFolder, "Open.mp4");
         if (File.Exists(path)) PlayVideoFile(path);
         else CloseWithEnded();
@@ -169,22 +137,17 @@ public partial class VideoPlayerWindow : Window
     private void ShowSignatureCanvas()
     {
         SignatureCanvas.Visibility = Visibility.Visible;
-        _drawStopTimer.Start();
+        SkipButton.Visibility = Visibility.Visible; // 确保手动跳过按钮可见
     }
 
     private void SignatureCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         _pressPoint = e.GetPosition(SignatureCanvas);
-        _drawStopTimer.Stop();
     }
 
     private void SignatureCanvas_MouseMove(object sender, MouseEventArgs e)
     {
-        if (e.LeftButton == MouseButtonState.Pressed && SignatureCanvas.Visibility == Visibility.Visible)
-        {
-            _drawStopTimer.Stop();
-            _drawStopTimer.Start();
-        }
+        // 无操作，不再重启计时器
     }
 
     private void SignatureCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -202,7 +165,7 @@ public partial class VideoPlayerWindow : Window
             PlaySkipVideo();
             return;
         }
-        _drawStopTimer.Start();
+        // 绘制完成后不启动任何计时器，永久停留
     }
 
     private void SkipButton_Click(object sender, RoutedEventArgs e) => PlaySkipVideo();
