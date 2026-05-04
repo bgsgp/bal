@@ -62,8 +62,8 @@ public partial class VideoPlayerWindow : Window
         var rnd = new Random();
         double roll = rnd.NextDouble(); // 0.0 ~ 1.0
 
-        string[] candidates = { "A.R.O.N.A", "Plana", "Both", "Change" };
-        double[] probabilities = { 0.4, 0.4, 0.15, 0.05 };
+        string[] candidates = ["A.R.O.N.A", "Plana", "Both", "Change"];
+        double[] probabilities = [0.4, 0.4, 0.15, 0.05];
 
         double cumulative = 0;
         string selected = candidates[0]; // 默认为 A.R.O.N.A
