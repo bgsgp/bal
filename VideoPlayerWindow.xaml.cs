@@ -28,22 +28,74 @@ public partial class VideoPlayerWindow : Window
         // 基础视频文件夹（simple 或 special）
         string baseVideoFolder = Path.Combine(PathHelper.ResourcesPath, PathHelper.GetVideoFolder(starLevel));
 
-        // 随机选择阿洛娜（A.R.O.N.A）或普拉娜（Plana）
-        var rnd = new Random();
-        string characterFolder = rnd.Next(2) == 0 ? "A.R.O.N.A" : "Plana";
-        _videoFolder = Path.Combine(baseVideoFolder, characterFolder);
-
-        // 若随机到的角色文件夹不存在，则回退到另一个
-        if (!Directory.Exists(_videoFolder))
+        // 根据星级选择不同的角色文件夹逻辑
+        if (starLevel == 3)
         {
-            string fallback = characterFolder == "A.R.O.N.A" ? "Plana" : "A.R.O.N.A";
-            _videoFolder = Path.Combine(baseVideoFolder, fallback);
+            // 三星：按概率随机选择 A.R.O.N.A、Plana、Both、Change
+            _videoFolder = ChooseSpecialCharacterFolder(baseVideoFolder);
+        }
+        else
+        {
+            // 普通星：随机选择 A.R.O.N.A 或 Plana（各 50%）
+            var rnd = new Random();
+            string characterFolder = rnd.Next(2) == 0 ? "A.R.O.N.A" : "Plana";
+            _videoFolder = Path.Combine(baseVideoFolder, characterFolder);
+            // 若随机到的文件夹不存在，则回退到另一个
+            if (!Directory.Exists(_videoFolder))
+            {
+                string fallback = characterFolder == "A.R.O.N.A" ? "Plana" : "A.R.O.N.A";
+                _videoFolder = Path.Combine(baseVideoFolder, fallback);
+            }
         }
 
         _drawStopTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         _drawStopTimer.Tick += (s, e) => { _drawStopTimer.Stop(); PlayOpenVideo(); };
 
         PlayStartVideo();
+    }
+
+    /// <summary>
+    /// 三星时按概率选取角色文件夹：0.4 A.R.O.N.A、0.4 Plana、0.15 Both、0.05 Change
+    /// </summary>
+    private static string ChooseSpecialCharacterFolder(string basePath)
+    {
+        var rnd = new Random();
+        double roll = rnd.NextDouble(); // 0.0 ~ 1.0
+
+        string[] candidates = { "A.R.O.N.A", "Plana", "Both", "Change" };
+        double[] probabilities = { 0.4, 0.4, 0.15, 0.05 };
+
+        double cumulative = 0;
+        string selected = candidates[0]; // 默认为 A.R.O.N.A
+
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            cumulative += probabilities[i];
+            if (roll < cumulative)
+            {
+                selected = candidates[i];
+                break;
+            }
+        }
+
+        string fullPath = Path.Combine(basePath, selected);
+
+        // 若所选文件夹不存在，按顺序回退到第一个存在的文件夹
+        if (!Directory.Exists(fullPath))
+        {
+            foreach (var folder in candidates)
+            {
+                string fallbackPath = Path.Combine(basePath, folder);
+                if (Directory.Exists(fallbackPath))
+                {
+                    fullPath = fallbackPath;
+                    break;
+                }
+            }
+            // 如果都不存在，保持原 fullPath，后续播放时会报错（可接受）
+        }
+
+        return fullPath;
     }
 
     private void PlayStartVideo()
